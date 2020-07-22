@@ -1,0 +1,6 @@
+echo "# flutter_E_store_admin" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/shawon1fb/flutter_E_store_admin.git
+git push -u origin master
