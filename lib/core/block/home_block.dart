@@ -37,8 +37,12 @@ class HomeBlock extends Object implements BaseBloc {
     if (q.length != 0)
       t = t
           .where((element) =>
-              element.productTitle.toString().contains(q) ||
-              element.productCategory.toString() == q)
+              element.productTitle
+                  .toString()
+                  .toLowerCase()
+                  .startsWith(q.toLowerCase()) ||
+              element.productCategory.toString().toLowerCase() ==
+                  q.toLowerCase())
           .toList();
     sink.add(t);
   });
