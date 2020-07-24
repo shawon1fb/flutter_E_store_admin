@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "308610030558",
+    "firebase_url": "https://e-commerce-7c6f6.firebaseio.com",
+    "project_id": "e-commerce-7c6f6",
+    "storage_bucket": "e-commerce-7c6f6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308610030558:android:e3bf8e34df03121ecfdb4f",
+        "android_client_info": {
+          "package_name": "com.shahanul.ecomadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308610030558-rh0ma1erp7jmjuulccjuhvonj8uk9kqj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFVNyb3PxH7Uooe3GvVKMPTn0_niAnwYw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308610030558-rh0ma1erp7jmjuulccjuhvonj8uk9kqj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "308610030558-1962h60npe671hqmleo7mkjucqh5d7n5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shahanul.flutteronlinestoreapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308610030558:android:ac4cbb2a419ad8c3cfdb4f",
+        "android_client_info": {
+          "package_name": "com.shahanul.flutteronlinestoreapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308610030558-rh0ma1erp7jmjuulccjuhvonj8uk9kqj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFVNyb3PxH7Uooe3GvVKMPTn0_niAnwYw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308610030558-rh0ma1erp7jmjuulccjuhvonj8uk9kqj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "308610030558-1962h60npe671hqmleo7mkjucqh5d7n5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shahanul.flutteronlinestoreapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

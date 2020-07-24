@@ -1,6 +1,8 @@
 import 'package:ecomadmin/ui/animation/fade_animation.dart';
+import 'package:ecomadmin/ui/views/home/screens/product/products_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,6 +19,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void getLogin() {
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            alignment: Alignment(1, 0.5),
+            child: ProductsScreen()));
     if (email == 'admin' && password == 'admin') {
       print('login');
     } else {

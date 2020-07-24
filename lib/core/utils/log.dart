@@ -41,7 +41,7 @@ class L {
 
   static void log(data, {bool track = false}) {
     if (track) {
-      _logger.e('L.log');
+      _logger.e(' L.log ');
     }
     var pen = AnsiPen()
       ..white(bg: true, bold: true)
