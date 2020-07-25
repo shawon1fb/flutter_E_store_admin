@@ -9,10 +9,31 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   FocusNode emailNode = FocusNode();
   FocusNode passwordNode = FocusNode();
+  AnimationController _scale2Controller;
+  Animation<double> _scale2Animation;
 
+  @override
+  void initState() {
+    super.initState();
+    _scale2Controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+    _scale2Animation =
+        Tween<double>(begin: 1.0, end: 32.0).animate(_scale2Controller)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+
+              getLogin();
+
+              /*Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade, child: ProductsScreen()));*/
+            }
+          });
+  }
 
   allUnFocus() {
     emailNode.unfocus();
@@ -20,21 +41,25 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void getLogin() {
-    Navigator.pushReplacement(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            alignment: Alignment(1, 0.5),
-            child: ProductsScreen()));
     if (email == 'admin' && password == 'admin') {
       print('login');
+
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.scale,
+              alignment: Alignment(1, 0.5),
+              child: ProductsScreen()));
     } else {
       print('failed.');
+      click = false;
+      _scale2Controller.reset();
     }
   }
 
   String email;
   String password;
+  bool click = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                                         border: InputBorder.none,
                                         hintText: "Email",
                                         hintStyle:
-                                        TextStyle(color: Colors.grey[400])),
+                                            TextStyle(color: Colors.grey[400])),
                                   ),
                                 ),
                                 Container(
@@ -166,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                                         border: InputBorder.none,
                                         hintText: "Password",
                                         hintStyle:
-                                        TextStyle(color: Colors.grey[400])),
+                                            TextStyle(color: Colors.grey[400])),
                                   ),
                                 )
                               ],
@@ -180,25 +205,47 @@ class _LoginPageState extends State<LoginPage> {
                           InkWell(
                             onTap: () {
                               allUnFocus();
-                              getLogin();
+                              //getLogin();
+                              click = true;
+                              _scale2Controller.forward();
                             },
-                            child: Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: LinearGradient(colors: [
-                                    Color.fromRGBO(143, 148, 251, 1),
-                                    Color.fromRGBO(143, 148, 251, .6),
-                                  ])),
-                              child: Center(
-                                child: Text(
-                                  "Login",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
+                            child: AnimatedBuilder(
+                                animation: _scale2Animation,
+                                builder: (context, snapshot) {
+                                  return Transform.scale(
+                                    scale: _scale2Animation.value,
+                                    child: Container(
+                                      height: 50,
+                                      decoration: click
+                                          ? BoxDecoration(
+                                              color: click
+                                                  ? Color(0xFF035AA6)
+                                                  : null,
+                                              shape: BoxShape.circle,
+                                            )
+                                          : BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              gradient: LinearGradient(colors: [
+                                                Color.fromRGBO(
+                                                    143, 148, 251, 1),
+                                                Color.fromRGBO(
+                                                    143, 148, 251, .6),
+                                              ])),
+                                      child: click
+                                          ? null
+                                          : Center(
+                                              child: Text(
+                                                "Login",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                    ),
+                                  );
+                                }),
                           )),
                       SizedBox(
                         height: 70,
