@@ -13,13 +13,14 @@ class _LoginPageState extends State<LoginPage> {
   FocusNode emailNode = FocusNode();
   FocusNode passwordNode = FocusNode();
 
+
   allUnFocus() {
     emailNode.unfocus();
     passwordNode.unfocus();
   }
 
   void getLogin() {
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         PageTransition(
             type: PageTransitionType.fade,
@@ -148,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                                         border: InputBorder.none,
                                         hintText: "Email",
                                         hintStyle:
-                                            TextStyle(color: Colors.grey[400])),
+                                        TextStyle(color: Colors.grey[400])),
                                   ),
                                 ),
                                 Container(
@@ -165,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                                         border: InputBorder.none,
                                         hintText: "Password",
                                         hintStyle:
-                                            TextStyle(color: Colors.grey[400])),
+                                        TextStyle(color: Colors.grey[400])),
                                   ),
                                 )
                               ],
