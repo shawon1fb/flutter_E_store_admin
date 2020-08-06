@@ -31,9 +31,15 @@ dependencies:
 
   #image picker
   image_picker: ^0.6.7+4
-  http_parser: ^3.1.4
+  image_size_getter: ^0.1.1
   #img compressor
   flutter_luban: ^0.1.11
+  filesize: ^1.0.4
+  flutter_image_compress: ^0.7.0
+  image: ^2.1.14
+
+
+  http_parser: ^3.1.4
   #path
   path_provider: ^1.6.11
 

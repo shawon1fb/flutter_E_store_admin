@@ -19,20 +19,19 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _scale2Controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+        AnimationController(duration: Duration(milliseconds: 900),vsync: this);
     _scale2Animation =
-        Tween<double>(begin: 1.0, end: 32.0).animate(_scale2Controller)
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
+    Tween<double>(begin: 1.0, end: 32.0).animate(_scale2Controller)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          getLogin();
 
-              getLogin();
-
-              /*Navigator.push(
+          /*Navigator.push(
                   context,
                   PageTransition(
                       type: PageTransitionType.fade, child: ProductsScreen()));*/
-            }
-          });
+        }
+      });
   }
 
   allUnFocus() {
@@ -174,7 +173,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                         border: InputBorder.none,
                                         hintText: "Email",
                                         hintStyle:
-                                            TextStyle(color: Colors.grey[400])),
+                                        TextStyle(color: Colors.grey[400])),
                                   ),
                                 ),
                                 Container(
@@ -191,7 +190,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                         border: InputBorder.none,
                                         hintText: "Password",
                                         hintStyle:
-                                            TextStyle(color: Colors.grey[400])),
+                                        TextStyle(color: Colors.grey[400])),
                                   ),
                                 )
                               ],
@@ -218,31 +217,31 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       height: 50,
                                       decoration: click
                                           ? BoxDecoration(
-                                              color: click
-                                                  ? Color(0xFF035AA6)
-                                                  : null,
-                                              shape: BoxShape.circle,
-                                            )
+                                        color: click
+                                            ? Color(0xFF035AA6)
+                                            : null,
+                                        shape: BoxShape.circle,
+                                      )
                                           : BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              gradient: LinearGradient(colors: [
-                                                Color.fromRGBO(
-                                                    143, 148, 251, 1),
-                                                Color.fromRGBO(
-                                                    143, 148, 251, .6),
-                                              ])),
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                          gradient: LinearGradient(colors: [
+                                            Color.fromRGBO(
+                                                143, 148, 251, 1),
+                                            Color.fromRGBO(
+                                                143, 148, 251, .6),
+                                          ])),
                                       child: click
                                           ? null
                                           : Center(
-                                              child: Text(
-                                                "Login",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
+                                        child: Text(
+                                          "Login",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight:
+                                              FontWeight.bold),
+                                        ),
+                                      ),
                                     ),
                                   );
                                 }),

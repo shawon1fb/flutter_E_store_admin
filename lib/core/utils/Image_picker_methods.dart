@@ -10,20 +10,25 @@ class FlutterImagePicker {
   static Future<File> compressImage(File imageFile) async {
     if (imageFile == null) return null;
     final tempDir = await getTemporaryDirectory();
-    int timeStart = DateTime.now().millisecondsSinceEpoch;
+    // int timeStart = DateTime.now().millisecondsSinceEpoch;
+    DateTime timeStart = DateTime.now();
     CompressObject compressObject = CompressObject(
       imageFile: imageFile,
       path: tempDir.path,
-      quality: 60,
-      step: 5,
+      quality: 85,
+      step: 1,
       mode: CompressMode.LARGE2SMALL,
     );
-    String path = await Luban.compressImage(compressObject);
+    try {
+      String path = await Luban.compressImage(compressObject);
 
-    File compressedFile = File(path);
-    int time = DateTime.now().millisecondsSinceEpoch - timeStart;
-    L.log("compress time : $time");
-    return compressedFile;
+      File compressedFile = File(path);
+      var time = DateTime.now().difference(timeStart);
+      L.log("compress time : $time");
+      return compressedFile;
+    } catch (e) {
+      return null;
+    }
   }
 
   static Future retrieveLostData() async {
@@ -37,7 +42,7 @@ class FlutterImagePicker {
         return (response.file);
       }
     } else {
-      print((response.exception));
+      // print((response.exception));
     }
     return;
   }
@@ -45,7 +50,7 @@ class FlutterImagePicker {
   static Future<File> getImageGallery(context) async {
     // ignore: deprecated_member_use
     File _image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 60);
+        source: ImageSource.gallery, imageQuality: 100);
     File temp;
     try {
       temp = await retrieveLostData();
@@ -70,7 +75,7 @@ class FlutterImagePicker {
   static Future<File> getImageCamera(context) async {
     // ignore: deprecated_member_use
     File _image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 60);
+        source: ImageSource.camera, imageQuality: 100);
     File temp;
     try {
       temp = await retrieveLostData();
@@ -168,7 +173,7 @@ class FlutterImagePicker {
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
                                             image: AssetImage(
-                                                "assets/images/assets_images_assets_gallery.png"),
+                                                "assets/images/galery.png"),
                                           )),
                                     ),
                                   ),
@@ -206,7 +211,7 @@ class FlutterImagePicker {
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
                                             image: AssetImage(
-                                                "assets/images/assets_images_assets_camera.png"),
+                                                "assets/images/camera.png"),
                                           )),
                                     ),
                                   ),
