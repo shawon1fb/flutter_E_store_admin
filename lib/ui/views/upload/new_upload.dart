@@ -7,6 +7,7 @@ import 'package:ecomadmin/ui/widgets/rounded_button.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_responsive_screen/flutter_responsive_screen.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,7 +25,9 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
   Future<File> testCompressAndGetFile(File file) async {
     Directory tempDir = await getTemporaryDirectory();
     String targetPath = tempDir.path;
-    L.log(file.absolute.path,);
+    L.log(
+      file.absolute.path,
+    );
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
@@ -58,21 +61,18 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
                     FlutterImagePicker.imagePickerModalSheet(
                       context: context,
                       fromCamera: () async {
-                        image2 =
-                            await FlutterImagePicker.getImageCamera(context);
+                        image2 = await FlutterImagePicker.getImageCamera(
+                            context,
+                            compress: false);
                         image = await FlutterImagePicker.compressImage(image2);
                         setState(() {});
                       },
                       fromGallery: () async {
-                        image2 =
-                            await FlutterImagePicker.getImageGallery(context);
-                          image = await FlutterImagePicker.compressImage(image2);
-                       // image = await testCompressAndGetFile(image2);
-
-                        //  tempImage=await testComporessList(tempImage);
-                        /* I.Image _img =
-                            I.decodeImage(await testCompressFile(image2));
-                        image=_img as File;*/
+                        image2 = await FlutterImagePicker.getImageGallery(
+                            context,
+                            compress: false);
+                        image = image =
+                            await FlutterImagePicker.compressImage(image2);
 
                         setState(() {});
                       },

@@ -1,34 +1,23 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_luban/flutter_luban.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'log.dart';
+
+///flutter_native_image: ^0.0.5
 
 class FlutterImagePicker {
   static Future<File> compressImage(File imageFile) async {
     if (imageFile == null) return null;
-    final tempDir = await getTemporaryDirectory();
-    // int timeStart = DateTime.now().millisecondsSinceEpoch;
-    DateTime timeStart = DateTime.now();
-    CompressObject compressObject = CompressObject(
-      imageFile: imageFile,
-      path: tempDir.path,
-      quality: 85,
-      step: 1,
-      mode: CompressMode.LARGE2SMALL,
-    );
+    File image;
     try {
-      String path = await Luban.compressImage(compressObject);
-
-      File compressedFile = File(path);
-      var time = DateTime.now().difference(timeStart);
-      L.log("compress time : $time");
-      return compressedFile;
+      image = await FlutterNativeImage.compressImage(imageFile.path,
+          quality: 80, percentage: 80);
     } catch (e) {
-      return null;
+      L.log(e);
     }
+    return image ?? null;
   }
 
   static Future retrieveLostData() async {
@@ -47,7 +36,7 @@ class FlutterImagePicker {
     return;
   }
 
-  static Future<File> getImageGallery(context) async {
+  static Future<File> getImageGallery(context, {bool compress = false}) async {
     // ignore: deprecated_member_use
     File _image = await ImagePicker.pickImage(
         source: ImageSource.gallery, imageQuality: 100);
@@ -59,20 +48,21 @@ class FlutterImagePicker {
       print(e);
     }
 
-    /* try {
-      File _tempImage = await compressImage(_image);
-      Navigator.of(context).pop();
-      return _tempImage;
-    } catch (e) {
-      Navigator.of(context).pop();
-      return _image;
-    }*/
-
+    if (compress == true) {
+      try {
+        File _tempImage = await compressImage(_image);
+        Navigator.of(context).pop();
+        return _tempImage;
+      } catch (e) {
+        Navigator.of(context).pop();
+        return _image;
+      }
+    }
     Navigator.of(context).pop();
     return _image;
   }
 
-  static Future<File> getImageCamera(context) async {
+  static Future<File> getImageCamera(context, {bool compress = false}) async {
     // ignore: deprecated_member_use
     File _image = await ImagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 100);
@@ -84,15 +74,16 @@ class FlutterImagePicker {
       print(e);
     }
 
-    /* try {
-      File _tempImage = await compressImage(_image);
-      Navigator.of(context).pop();
-      return _tempImage;
-    } catch (e) {
-      Navigator.of(context).pop();
-      return _image;
-    }*/
-
+    if (compress == true) {
+      try {
+        File _tempImage = await compressImage(_image);
+        Navigator.of(context).pop();
+        return _tempImage;
+      } catch (e) {
+        Navigator.of(context).pop();
+        return _image;
+      }
+    }
     Navigator.of(context).pop();
     return _image;
   }
