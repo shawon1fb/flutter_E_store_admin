@@ -1,3 +1,6 @@
+import 'package:ecomadmin/core/fire_base/product_collection.dart';
+import 'package:ecomadmin/core/models/product_details_model.dart';
+import 'package:ecomadmin/core/utils/flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -6,7 +9,10 @@ import '../../../constants.dart';
 class ChatAndAddToCart extends StatelessWidget {
   const ChatAndAddToCart({
     Key key,
+    this.product,
   }) : super(key: key);
+
+  final ProductDetailsModel product;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +40,14 @@ class ChatAndAddToCart extends StatelessWidget {
           // it will cover all available spaces
           Spacer(),
           FlatButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              ProductCollection.productDelete(product.productId.toString())
+                  .then((value) {
+                FlutterToast.showSuccess(
+                    context: context, message: 'product deleted');
+                Navigator.pop(context);
+              });
+            },
             icon: SvgPicture.asset(
               "assets/icons/shopping-bag.svg",
               height: 18,

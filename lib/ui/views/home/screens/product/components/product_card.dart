@@ -1,4 +1,6 @@
+import 'package:ecomadmin/core/fire_base/product_collection.dart';
 import 'package:ecomadmin/core/models/product_details_model.dart';
+import 'package:ecomadmin/core/utils/flutter_toast.dart';
 import 'package:ecomadmin/ui/views/home/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:shape_of_view/shape_of_view.dart';
@@ -10,11 +12,13 @@ class ProductCard extends StatelessWidget {
     this.itemIndex,
     this.product,
     this.press,
+    this.onDelete,
   }) : super(key: key);
 
   final int itemIndex;
   final ProductDetailsModel product;
   final Function press;
+  final Function onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -129,9 +133,7 @@ class ProductCard extends StatelessWidget {
                   borderWidth: 2, //optional
                 ),
                 child: InkWell(
-                  onTap: () {
-                    print('clicked');
-                  },
+                  onTap: onDelete,
                   child: Icon(
                     Icons.close,
                     size: 30.0,

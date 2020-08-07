@@ -1,5 +1,7 @@
 import 'package:ecomadmin/core/block/home_block.dart';
+import 'package:ecomadmin/core/fire_base/product_collection.dart';
 import 'package:ecomadmin/core/models/product_details_model.dart';
+import 'package:ecomadmin/core/utils/flutter_toast.dart';
 import 'package:ecomadmin/core/utils/log.dart';
 import 'package:ecomadmin/ui/animation/fade_animation.dart';
 import 'package:ecomadmin/ui/views/home/components/search_box.dart';
@@ -18,6 +20,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   HomeBlock homeBlock = new HomeBlock();
+  int category = 0;
 
   @override
   void initState() {
@@ -39,6 +42,7 @@ class _BodyState extends State<Body> {
           CategoryList(
             onSelect: (index) {
               if (index == 0) return homeBlock.productQuery('');
+              category = index;
               homeBlock.productQuery(index.toString());
             },
           ),
@@ -72,8 +76,8 @@ class _BodyState extends State<Body> {
                             ProductCard(
                               itemIndex: i,
                               product: snapshot.data[i],
-                              press: () {
-                                Navigator.push(
+                              press: () async {
+                                await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => DetailsScreen(
@@ -81,6 +85,25 @@ class _BodyState extends State<Body> {
                                     ),
                                   ),
                                 );
+                                if (category != 0)
+                                  homeBlock.productQuery(category.toString());
+                                else
+                                  homeBlock.productQuery('');
+                              },
+                              onDelete: () {
+                                print('onDelete clicked');
+                                ProductCollection.productDelete(
+                                        snapshot.data[i].productId.toString())
+                                    .then((value) {
+                                  snapshot.data.removeAt(i);
+                                  if (category != 0)
+                                    homeBlock.productQuery(category.toString());
+                                  else
+                                    homeBlock.productQuery('');
+                                  FlutterToast.showSuccess(
+                                      context: context,
+                                      message: "product Deleted");
+                                });
                               },
                             )),
                       );
