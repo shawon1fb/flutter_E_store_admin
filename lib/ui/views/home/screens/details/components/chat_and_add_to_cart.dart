@@ -3,6 +3,7 @@ import 'package:ecomadmin/core/models/product_details_model.dart';
 import 'package:ecomadmin/core/utils/flutter_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../constants.dart';
 
@@ -28,13 +29,14 @@ class ChatAndAddToCart extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          SvgPicture.asset(
-            "assets/icons/chat.svg",
-            height: 18,
+          Icon(
+            FontAwesomeIcons.penSquare,
+            size: 18,
+            color: Colors.white,
           ),
           SizedBox(width: kDefaultPadding / 2),
           Text(
-            "update",
+            "Update",
             style: TextStyle(color: Colors.white),
           ),
           // it will cover all available spaces
@@ -48,13 +50,12 @@ class ChatAndAddToCart extends StatelessWidget {
                 Navigator.pop(context);
               });
             },
-            icon: SvgPicture.asset(
-              "assets/icons/shopping-bag.svg",
-              height: 18,
-            ),
-            label: Text(
-              "Delete",
-              style: TextStyle(color: Colors.white),
+            icon: Icon(Icons.delete,color: Colors.white,size: 18,),
+            label: Center(
+              child: Text(
+                "Delete",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ],

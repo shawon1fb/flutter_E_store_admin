@@ -1,4 +1,5 @@
 import 'package:ecomadmin/ui/views/home/constants.dart';
+import 'package:ecomadmin/ui/views/home/screens/product/products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
         accentColor: kPrimaryColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+   //   home: MyHomePage(),
+      home: ProductsScreen(),
      // home: NewProDuctUpload(),
     );
   }

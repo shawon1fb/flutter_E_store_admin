@@ -1,17 +1,18 @@
 import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:ecomadmin/core/utils/Image_picker_methods.dart';
+import 'package:ecomadmin/core/constant/product_category.dart';
+import 'package:ecomadmin/core/fire_base/product_collection.dart';
+import 'package:ecomadmin/core/models/product_details_model.dart';
+import 'package:ecomadmin/core/utils/firebase_storage_method.dart';
+import 'package:ecomadmin/core/utils/flutter_toast.dart';
 import 'package:ecomadmin/core/utils/log.dart';
+import 'package:ecomadmin/ui/dialog/dialog_router.dart';
+import 'package:ecomadmin/ui/widgets/drop_down_list.dart';
+import 'package:ecomadmin/ui/widgets/multi_line_text_field.dart';
 import 'package:ecomadmin/ui/widgets/rounded_button.dart';
-import 'package:filesize/filesize.dart';
+import 'package:ecomadmin/ui/widgets/text_inpute_WithPrefix_Suffix.dart';
+import 'package:ecomadmin/ui/widgets/upload_image_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_responsive_screen/flutter_responsive_screen.dart';
-import 'package:image_size_getter/image_size_getter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:image/image.dart' as I;
 
 class NewProDuctUpload extends StatefulWidget {
   @override
@@ -19,26 +20,100 @@ class NewProDuctUpload extends StatefulWidget {
 }
 
 class _NewProDuctUploadState extends State<NewProDuctUpload> {
+  final _formKey = GlobalKey<FormState>();
   File image;
-  File image2;
+  Color borderColor = Colors.white;
 
-  Future<File> testCompressAndGetFile(File file) async {
-    Directory tempDir = await getTemporaryDirectory();
-    String targetPath = tempDir.path;
-    L.log(
-      file.absolute.path,
-    );
-    var result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      targetPath,
-      quality: 88,
-      rotate: 180,
-    );
+  String productName;
+  String productId;
+  String productCategory;
+  String productPrice;
+  String productDetails;
 
-    print(file.lengthSync());
-    print(result.lengthSync());
+  TextEditingController productNameController = new TextEditingController();
+  TextEditingController productIdController = new TextEditingController();
+  TextEditingController productPriceController = new TextEditingController();
+  TextEditingController productDetailsController = new TextEditingController();
 
-    return result;
+  FocusNode nameNode = FocusNode();
+  FocusNode idNode = FocusNode();
+  FocusNode categoryNode = FocusNode();
+  FocusNode priceNode = FocusNode();
+  FocusNode detailsNode = FocusNode();
+
+  @override
+  void dispose() {
+    nameNode.dispose();
+    idNode.dispose();
+    categoryNode.dispose();
+    priceNode.dispose();
+    detailsNode.dispose();
+    super.dispose();
+  }
+
+  uploadProducts() async {
+    productName = productNameController.text;
+    productId = productIdController.text;
+    productPrice = productPriceController.text;
+    productDetails = productDetailsController.text;
+    if (image == null) {
+      borderColor = Colors.red;
+      setState(() {});
+      FlutterToast.showErrorToast(
+          context: context, message: "Please select a product Image");
+      return;
+    }
+    if (_formKey.currentState.validate()) {
+      DialogRouter.displayProgressDialog(context);
+      String url = await FlutterFireBaseStorage.uploadImage(
+          imageFile: image, dirName: 'products');
+      if (url == null) {
+        DialogRouter.closeProgressDialog(context);
+        FlutterToast.showErrorToast(
+            context: context, message: "image upload failed");
+        return;
+      }
+      ProductDetailsModel productModel = new ProductDetailsModel(
+        imageUrl: url,
+        price: productPrice,
+        productCategory: productCategory,
+        productDetail: productDetails,
+        productId: productId,
+        productTitle: productName,
+      );
+      L.map(productModel.toJson());
+
+      ProductCollection.productUpload(productModel).then((value) {
+        clearAllData();
+        DialogRouter.closeProgressDialog(context);
+        FlutterToast.showSuccess(context: context, message: 'Product uploaded');
+      });
+    }
+  }
+
+  clearAllData() {
+    image = null;
+    productNameController.clear();
+    productIdController.clear();
+    productPriceController.clear();
+    productDetailsController.clear();
+    setState(() {});
+  }
+
+  allUnFocus() {
+    nameNode.unfocus();
+    idNode.unfocus();
+    categoryNode.unfocus();
+    priceNode.unfocus();
+    detailsNode.unfocus();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    productCategory =
+        ProductCategory.categoryToId[ProductCategory.categoryList.first];
   }
 
   @override
@@ -47,57 +122,145 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
     final Function hp = Screen(MediaQuery.of(context).size).hp;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF035AA6),
+        title: Text(
+          'Add Product',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
       body: SafeArea(
         child: Container(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                child: RoundBoarderButton(
-                  text: "Image",
-                  onPress: () {
-                    FlutterImagePicker.imagePickerModalSheet(
-                      context: context,
-                      fromCamera: () async {
-                        image2 = await FlutterImagePicker.getImageCamera(
-                            context,
-                            compress: false);
-                        image = await FlutterImagePicker.compressImage(image2);
-                        setState(() {});
-                      },
-                      fromGallery: () async {
-                        image2 = await FlutterImagePicker.getImageGallery(
-                            context,
-                            compress: false);
-                        image = image =
-                            await FlutterImagePicker.compressImage(image2);
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 20,
+                    width: wp(100),
+                  ),
+                  UploadImageCard(
+                    borderColor: borderColor,
+                    image: image,
+                    onImageSelect: (file) {
+                      image = file;
+                      setState(() {
 
-                        setState(() {});
-                      },
-                    );
-                  },
-                ),
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextInputWithPrefixSuffix(
+                          hint: 'Product Name',
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                          controller: productNameController,
+                          focusNode: nameNode,
+                          onFieldSubmitted: (v) {
+                            nameNode.unfocus();
+                            idNode.requestFocus();
+                          },
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        TextInputWithPrefixSuffix(
+                          hint: 'Product Id',
+                          controller: productIdController,
+                          inputType: TextInputType.number,
+                          focusNode: idNode,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter Id';
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (v) {
+                            idNode.unfocus();
+                            priceNode.requestFocus();
+                          },
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        TextInputWithPrefixSuffix(
+                          hint: 'Product Price',
+                          inputType: TextInputType.number,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter price';
+                            }
+                            return null;
+                          },
+                          controller: productPriceController,
+                          focusNode: priceNode,
+                          onFieldSubmitted: (v) {
+                            priceNode.unfocus();
+                            categoryNode.requestFocus();
+                          },
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        DropDownList(
+                          dropdownNode: categoryNode,
+                          itemList: ProductCategory.categoryList,
+                          hint: ProductCategory.categoryList.first,
+                          onChanged: (v) {
+                            categoryNode.unfocus();
+                            detailsNode.requestFocus();
+                            productCategory = ProductCategory.categoryToId[v];
+                          },
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        MultiLineTextField(
+                          hint: "product Details",
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter product details';
+                            }
+                            return null;
+                          },
+                          controller: productDetailsController,
+                          focusNode: detailsNode,
+                          onFieldSubmitted: (v) {
+                            detailsNode.unfocus();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  RoundBoarderButton(
+                    text: 'Upload',
+                    onPress: () {
+                      allUnFocus();
+                      uploadProducts();
+                    },
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 20,
-              ),
-              AspectRatio(
-                aspectRatio: 4 / 3,
-                child: image != null ? Image.file(image) : Container(),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text('${image2 != null ? ImageSizGetter.getSize(image2) : 0}'),
-              Text(
-                  'Original size : ${image2 != null ? image2.lengthSync() : 0}'),
-              Text(
-                  'Compress Size ${image != null ? filesize(image.lengthSync(), 4) : 0} '),
-              Text(
-                  'Original size ${image2 != null ? filesize(image2.lengthSync(), 4) : 0}'),
-            ],
+            ),
           ),
         ),
       ),

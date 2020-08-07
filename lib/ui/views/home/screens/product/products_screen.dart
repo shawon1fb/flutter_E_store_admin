@@ -1,3 +1,4 @@
+import 'package:ecomadmin/ui/views/drawer/left_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -9,6 +10,7 @@ class ProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
+      drawer: leftDrawer(context),
       backgroundColor: kPrimaryColor,
       body: Body(),
     );
@@ -20,8 +22,7 @@ class ProductsScreen extends StatelessWidget {
       centerTitle: false,
       title: Text('Dashboard'),
       actions: <Widget>[
-
-       /* IconButton(
+        /* IconButton(
           icon:Icon(Icons.notifications_active),
           onPressed: () {},
         ),*/
