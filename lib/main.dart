@@ -2,7 +2,9 @@ import 'package:ecomadmin/ui/views/home/constants.dart';
 import 'package:ecomadmin/ui/views/home/screens/product/products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 
+import 'core/local_storage/secure_storage.dart';
 import 'ui/views/auth/login_page.dart';
 import 'ui/views/upload/new_upload.dart';
 
@@ -25,9 +27,9 @@ class MyApp extends StatelessWidget {
         accentColor: kPrimaryColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-   //   home: MyHomePage(),
-      home: ProductsScreen(),
-     // home: NewProDuctUpload(),
+         home: MyHomePage(),
+     // home: ProductsScreen(),
+      // home: NewProDuctUpload(),
     );
   }
 }
@@ -38,6 +40,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    session();
+  }
+
+  void session() async {
+    String token = await SecureStorage.getToken();
+    if (token != null) {
+      Navigator.pushReplacement(
+          context,
+          PageTransition(
+              type: PageTransitionType.scale,
+              alignment: Alignment(1, 0.5),
+              child: ProductsScreen()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return LoginPage();

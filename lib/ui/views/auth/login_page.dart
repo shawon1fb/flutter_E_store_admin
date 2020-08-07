@@ -1,7 +1,9 @@
+import 'package:ecomadmin/core/local_storage/secure_storage.dart';
 import 'package:ecomadmin/ui/animation/fade_animation.dart';
 import 'package:ecomadmin/ui/views/home/screens/product/products_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:page_transition/page_transition.dart';
 
 class LoginPage extends StatefulWidget {
@@ -37,6 +39,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   void getLogin() {
     if (email == 'admin' && password == 'admin') {
       print('login');
+
+      SecureStorage.saveToken('login');
 
       Navigator.pushReplacement(
           context,

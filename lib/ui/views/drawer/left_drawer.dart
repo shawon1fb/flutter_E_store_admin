@@ -1,3 +1,5 @@
+import 'package:ecomadmin/core/local_storage/secure_storage.dart';
+import 'package:ecomadmin/ui/views/auth/login_page.dart';
 import 'package:ecomadmin/ui/views/upload/new_upload.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -37,7 +39,15 @@ Widget leftDrawer(BuildContext context) {
           ),
           ListTile(
             title: Text('Logout'),
-            onTap: () {},
+            onTap: () {
+              SecureStorage.deleteAllSecureData();
+              Navigator.pushReplacement(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.scale,
+                      alignment: Alignment(1, 0.5),
+                      child: LoginPage()));
+            },
           ),
         ],
       ),
