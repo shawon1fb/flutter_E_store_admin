@@ -73,6 +73,7 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
             context: context, message: "image upload failed");
         return;
       }
+
       ProductDetailsModel productModel = new ProductDetailsModel(
         imageUrl: url,
         price: productPrice,
@@ -147,9 +148,7 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
                     image: image,
                     onImageSelect: (file) {
                       image = file;
-                      setState(() {
-
-                      });
+                      setState(() {});
                     },
                   ),
                   SizedBox(
