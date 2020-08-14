@@ -6,7 +6,6 @@ import 'package:page_transition/page_transition.dart';
 
 import 'core/local_storage/secure_storage.dart';
 import 'ui/views/auth/login_page.dart';
-import 'ui/views/upload/new_upload.dart';
 
 void main() {
   runApp(MyApp());

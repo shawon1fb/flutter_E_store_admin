@@ -4,6 +4,7 @@ import 'package:ecomadmin/core/models/product_details_model.dart';
 import 'package:ecomadmin/core/utils/flutter_toast.dart';
 import 'package:ecomadmin/core/utils/log.dart';
 import 'package:ecomadmin/ui/animation/fade_animation.dart';
+import 'package:ecomadmin/ui/animation/fade_animation_up.dart';
 import 'package:ecomadmin/ui/views/home/components/search_box.dart';
 import 'package:ecomadmin/ui/views/home/models/product.dart';
 import 'package:ecomadmin/ui/views/home/screens/details/details_screen.dart';
@@ -41,8 +42,9 @@ class _BodyState extends State<Body> {
           }),
           CategoryList(
             onSelect: (index) {
-              if (index == 0) return homeBlock.productQuery('');
               category = index;
+              if (index == 0) return homeBlock.productQuery('');
+
               homeBlock.productQuery(index.toString());
             },
           ),
@@ -71,41 +73,44 @@ class _BodyState extends State<Body> {
                       return ListView.builder(
                         // here we use our demo procuts list
                         itemCount: snapshot.data.length,
-                        itemBuilder: (context, i) => FadeAnimation(
-                            0.8,
-                            ProductCard(
-                              itemIndex: i,
-                              product: snapshot.data[i],
-                              press: () async {
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DetailsScreen(
-                                      product: snapshot.data[i],
-                                    ),
+                        itemBuilder: (context, i) => FadeAnimationUp(
+                          delay: 0.4 * i,
+                          child: ProductCard(
+                            itemIndex: i,
+                            product: snapshot.data[i],
+                            press: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailsScreen(
+                                    product: snapshot.data[i],
                                   ),
-                                );
+                                ),
+                              );
+                              L.log("category : "+category.toString());
+                              if (category != 0)
+                                homeBlock.productQuery(category.toString());
+                              else
+                                homeBlock.productQuery('');
+                            },
+                            onDelete: () {
+                              print('onDelete clicked');
+                              ProductCollection.productDelete(
+                                      snapshot.data[i].productId.toString())
+                                  .then((value) {
+                                snapshot.data.removeAt(i);
+                                L.log("category : "+category.toString());
                                 if (category != 0)
                                   homeBlock.productQuery(category.toString());
                                 else
                                   homeBlock.productQuery('');
-                              },
-                              onDelete: () {
-                                print('onDelete clicked');
-                                ProductCollection.productDelete(
-                                        snapshot.data[i].productId.toString())
-                                    .then((value) {
-                                  snapshot.data.removeAt(i);
-                                  if (category != 0)
-                                    homeBlock.productQuery(category.toString());
-                                  else
-                                    homeBlock.productQuery('');
-                                  FlutterToast.showSuccess(
-                                      context: context,
-                                      message: "product Deleted");
-                                });
-                              },
-                            )),
+                                FlutterToast.showSuccess(
+                                    context: context,
+                                    message: "product Deleted");
+                              });
+                            },
+                          ),
+                        ),
                       );
                     })
               ],
