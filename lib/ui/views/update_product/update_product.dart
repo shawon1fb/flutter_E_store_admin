@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:math';
+import 'package:http/http.dart' as http;
 import 'package:ecomadmin/core/block/home_block.dart';
 import 'package:ecomadmin/core/constant/product_category.dart';
 import 'package:ecomadmin/core/fire_base/product_collection.dart';
@@ -17,15 +19,23 @@ import 'package:ecomadmin/ui/widgets/upload_image_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_responsive_screen/flutter_responsive_screen.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
-class NewProDuctUpload extends StatefulWidget {
+class UpdateProductPage extends StatefulWidget {
+  final ProductDetailsModel model;
+
+  UpdateProductPage({
+    this.model,
+  });
+
   @override
-  _NewProDuctUploadState createState() => _NewProDuctUploadState();
+  _UpdateProductPageState createState() => _UpdateProductPageState();
 }
 
-class _NewProDuctUploadState extends State<NewProDuctUpload> {
+class _UpdateProductPageState extends State<UpdateProductPage> {
   final _formKey = GlobalKey<FormState>();
   File image;
+  File updatedImage;
   Color borderColor = Colors.white;
   HomeBlock homeBlock = new HomeBlock();
   String productName;
@@ -68,20 +78,25 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
       return;
     }
     if (_formKey.currentState.validate()) {
+      String productUrl = widget.model.imageUrl;
       DialogRouter.displayProgressDialog(context);
-      String url = await FlutterFireBaseStorage.uploadImage(
-          imageFile: image, dirName: 'products');
-      if (url == null) {
-        DialogRouter.closeProgressDialog(context);
-        FlutterToast.showErrorToast(
-            context: context, message: "image upload failed");
-        return;
+      if (updatedImage != null) {
+        String url = await FlutterFireBaseStorage.uploadImage(
+            imageFile: updatedImage, dirName: 'products');
+        if (url == null) {
+          DialogRouter.closeProgressDialog(context);
+          FlutterToast.showErrorToast(
+              context: context, message: "image upload failed");
+          return;
+        } else {
+          productUrl = url;
+        }
       }
 
-      productId = (box.get('maxId') + 1).toString();
-      box.put('maxId', box.get('maxId') + 1);
+      productId = widget.model.productId;
+
       ProductDetailsModel productModel = new ProductDetailsModel(
-        imageUrl: url,
+        imageUrl: productUrl,
         price: productPrice,
         productCategory: productCategory,
         productDetail: productDetails,
@@ -93,7 +108,7 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
       ProductCollection.productUpload(productModel).then((value) {
         clearAllData();
         DialogRouter.closeProgressDialog(context);
-        FlutterToast.showSuccess(context: context, message: 'Product uploaded');
+        FlutterToast.showSuccess(context: context, message: 'Product updated');
       });
     }
   }
@@ -119,10 +134,35 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    homeBlock.productQuery('');
-    productCategory =
-        ProductCategory.categoryToId[ProductCategory.categoryList.first];
-    // box.put('name', 'Shawon');
+
+    initialValue();
+  }
+
+  initialValue() async {
+    productCategory = widget.model.productCategory;
+    productNameController.text = widget.model.productTitle;
+    productPriceController.text = widget.model.price;
+    productDetailsController.text = widget.model.productDetail;
+    image = await urlToFile(widget.model.imageUrl);
+    setState(() {});
+  }
+
+  Future<File> urlToFile(String imageUrl) async {
+// generate random number.
+    var rng = new Random();
+// get temporary directory of device.
+    Directory tempDir = await getTemporaryDirectory();
+// get temporary path from temporary directory.
+    String tempPath = tempDir.path;
+// create a new file in temporary path with random file name.
+    File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
+// call http.get method and pass imageUrl into it to get response.
+    http.Response response = await http.get(imageUrl);
+// write bodyBytes received in response to file.
+    await file.writeAsBytes(response.bodyBytes);
+// now return the file which is created with random name in
+// temporary directory and image bytes from response is written to // that file.
+    return file;
   }
 
   var box = Hive.box('myBox');
@@ -136,8 +176,7 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
       appBar: AppBar(
         backgroundColor: Color(0xFF035AA6),
         title: Text(
-          '${box.get('maxId')}',
-          //  'Add Product',
+          'Update Product',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -160,6 +199,7 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
                       image: image,
                       onImageSelect: (file) {
                         image = file;
+                        updatedImage = image;
                         setState(() {});
                       },
                     ),
@@ -241,7 +281,8 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
                           child: DropDownList(
                             dropdownNode: categoryNode,
                             itemList: ProductCategory.categoryList,
-                            hint: ProductCategory.categoryList.first,
+                            hint: ProductCategory
+                                .idToCategory[widget.model.productCategory],
                             onChanged: (v) {
                               categoryNode.unfocus();
                               detailsNode.requestFocus();
@@ -278,7 +319,7 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
                   FadeAnimationUp(
                     delay: 1.5,
                     child: RoundBoarderButton(
-                      text: 'Upload',
+                      text: 'UPDATE',
                       onPress: () {
                         allUnFocus();
                         uploadProducts();

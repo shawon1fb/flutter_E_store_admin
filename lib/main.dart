@@ -2,12 +2,18 @@ import 'package:ecomadmin/ui/views/home/constants.dart';
 import 'package:ecomadmin/ui/views/home/screens/product/products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'core/local_storage/secure_storage.dart';
 import 'ui/views/auth/login_page.dart';
+import 'ui/views/upload/new_upload.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  var box = await Hive.openBox('myBox');
+ // box.put('name', 2);
   runApp(MyApp());
 }
 
@@ -26,9 +32,9 @@ class MyApp extends StatelessWidget {
         accentColor: kPrimaryColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-         home: MyHomePage(),
-     // home: ProductsScreen(),
-      // home: NewProDuctUpload(),
+      //  home: MyHomePage(),
+        home: ProductsScreen(),
+   //   home: NewProDuctUpload(),
     );
   }
 }

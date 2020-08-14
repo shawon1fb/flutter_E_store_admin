@@ -2,7 +2,7 @@ class ProductDetailsModel {
   final productTitle;
   final price;
   final productDetail;
-  final productId;
+  final  productId;
   final imageUrl;
   final productCategory;
 

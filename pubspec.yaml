@@ -43,6 +43,7 @@ dependencies:
 
 
   http_parser: ^3.1.4
+  http: ^0.12.2
   #path
   path_provider: ^1.6.11
 

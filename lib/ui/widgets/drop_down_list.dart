@@ -64,8 +64,9 @@ class _DropDownListState extends State<DropDownList> {
             )),
         child: DropdownButton<String>(
           onTap: widget.onTap,
-          value: // value,
-              widget.itemList.contains(value) ? value : widget.itemList[0],
+          value: // value??'${widget.hint}',
+              //widget.itemList.contains(value) ? value : widget.itemList[0],
+              widget.itemList.contains(value) ? value : widget.hint,
           icon: Padding(
             padding: const EdgeInsets.only(top: 0),
             child: Icon(
@@ -81,7 +82,7 @@ class _DropDownListState extends State<DropDownList> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                widget.hint == null ? " " : widget.hint,
+                widget.hint ?? " ",
                 textAlign: TextAlign.center,
                 style: textStyle,
               ),
