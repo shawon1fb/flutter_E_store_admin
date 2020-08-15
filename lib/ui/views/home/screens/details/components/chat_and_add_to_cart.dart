@@ -38,8 +38,8 @@ class ChatAndAddToCart extends StatelessWidget {
           ),
           SizedBox(width: kDefaultPadding / 2),
           InkWell(
-            onTap: () {
-              Navigator.pushReplacement(
+            onTap: () async {
+              await Navigator.push(
                 context,
                 PageTransition(
                   type: PageTransitionType.scale,
@@ -49,6 +49,7 @@ class ChatAndAddToCart extends StatelessWidget {
                   ),
                 ),
               );
+              Navigator.pop(context);
             },
             child: Text(
               "Update",

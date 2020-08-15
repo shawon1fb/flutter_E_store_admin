@@ -93,7 +93,7 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
         }
       }
 
-      productId = widget.model.productId;
+      productId = widget.model.productId.toString();
 
       ProductDetailsModel productModel = new ProductDetailsModel(
         imageUrl: productUrl,
@@ -139,9 +139,9 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
   }
 
   initialValue() async {
-    productCategory = widget.model.productCategory;
+    productCategory = widget.model.productCategory.toString();
     productNameController.text = widget.model.productTitle;
-    productPriceController.text = widget.model.price;
+    productPriceController.text = widget.model.price.toString();
     productDetailsController.text = widget.model.productDetail;
     image = await urlToFile(widget.model.imageUrl);
     setState(() {});

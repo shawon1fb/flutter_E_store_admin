@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
         accentColor: kPrimaryColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      //  home: MyHomePage(),
-        home: ProductsScreen(),
+        home: MyHomePage(),
+      //  home: ProductsScreen(),
    //   home: NewProDuctUpload(),
     );
   }

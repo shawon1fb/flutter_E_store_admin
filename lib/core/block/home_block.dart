@@ -41,7 +41,7 @@ class HomeBlock extends Object implements BaseBloc {
         box.put(
           'maxId',
           max(int.tryParse(box.get('maxId').toString()) ?? 0,
-              int.tryParse(temp.productId) ?? 0),
+              int.tryParse(temp.productId.toString()) ?? 0),
         );
       }
       t.add(temp);

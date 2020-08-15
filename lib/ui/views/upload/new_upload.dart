@@ -136,8 +136,8 @@ class _NewProDuctUploadState extends State<NewProDuctUpload> {
       appBar: AppBar(
         backgroundColor: Color(0xFF035AA6),
         title: Text(
-          '${box.get('maxId')}',
-          //  'Add Product',
+          //'${box.get('maxId')}',
+            'Add Product',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),

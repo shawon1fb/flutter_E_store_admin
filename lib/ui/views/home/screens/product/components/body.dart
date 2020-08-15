@@ -74,7 +74,7 @@ class _BodyState extends State<Body> {
                         // here we use our demo procuts list
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, i) => FadeAnimationUp(
-                          delay: 0.4 * i,
+                          delay: 0.7,
                           child: ProductCard(
                             itemIndex: i,
                             product: snapshot.data[i],
